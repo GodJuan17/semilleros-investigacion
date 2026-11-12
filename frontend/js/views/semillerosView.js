@@ -14,6 +14,8 @@ let filters = {
   directorId: '',
 };
 
+let viewMode = 'table'; // 'table' | 'cards'
+
 export function renderSemillerosView(container) {
   const { semilleros, integrantes, lineas, directores } = store;
 
@@ -51,62 +53,132 @@ export function renderSemillerosView(container) {
     )
     .join('');
 
-  const cardsHtml = filtered.length
-    ? `<div class="cards-grid">
-        ${filtered
-          .map((s) => {
-            const count = getIntegrantesBySemillero(s.id).length;
-            const lineasHtml = (s.lineas || []).length
-              ? s.lineas.map((l) => `<span class="tag">${escapeHtml(l.nombre)}</span>`).join('')
-              : '<span class="text-sm text-muted">Sin líneas asociadas</span>';
+  const cardsHtml = `
+    <div class="cards-grid">
+      ${filtered
+        .map((s) => {
+          const count = getIntegrantesBySemillero(s.id).length;
+          const lineasHtml = (s.lineas || []).length
+            ? s.lineas.map((l) => `<span class="tag">${escapeHtml(l.nombre)}</span>`).join('')
+            : '<span class="text-sm text-muted">Sin líneas asociadas</span>';
 
-            return `
-              <article class="semillero-card" data-semillero-id="${s.id}">
-                <div class="semillero-card__header">
-                  <div>
-                    <span class="sigla-badge">${escapeHtml(s.sigla)}</span>
-                  </div>
-                  <div class="card-actions">
-                    <button type="button" class="btn btn--secondary btn--sm" data-action="edit" data-id="${s.id}">
-                      Editar
-                    </button>
-                    <button type="button" class="btn btn--danger btn--sm" data-action="delete" data-id="${s.id}">
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-
+          return `
+            <article class="semillero-card" data-semillero-id="${s.id}">
+              <div class="semillero-card__header">
                 <div>
-                  <h2 class="semillero-card__title" data-action="open" data-id="${s.id}">
-                    ${escapeHtml(s.nombre)}
-                  </h2>
-                  <p class="semillero-card__group">${escapeHtml(s.grupoInvestigacion)}</p>
+                  <span class="sigla-badge">${escapeHtml(s.sigla)}</span>
                 </div>
-
-                <div class="semillero-card__meta">
-                  <div class="meta-row">
-                    <span class="meta-row__label">Director</span>
-                    <span class="meta-row__value">${escapeHtml(s.director?.nombre || 'No asignado')}</span>
-                  </div>
-                  <div class="meta-row">
-                    <span class="meta-row__label">Integrantes</span>
-                    <span class="meta-row__value">${count} registrado${count === 1 ? '' : 's'}</span>
-                  </div>
+                <div class="card-actions">
+                  <button type="button" class="btn btn--secondary btn--sm" data-action="edit" data-id="${s.id}">
+                    Editar
+                  </button>
+                  <button type="button" class="btn btn--danger btn--sm" data-action="delete" data-id="${s.id}">
+                    Eliminar
+                  </button>
                 </div>
+              </div>
 
-                <div class="tags-wrap">${lineasHtml}</div>
+              <div>
+                <h2 class="semillero-card__title" data-action="open" data-id="${s.id}">
+                  ${escapeHtml(s.nombre)}
+                </h2>
+                <p class="semillero-card__group">${escapeHtml(s.grupoInvestigacion)}</p>
+              </div>
 
-                <div class="semillero-card__footer">
-                  <span class="text-sm text-muted">${(s.lineas || []).length} línea(s)</span>
-                  <a href="#/semilleros/${s.id}" class="btn btn--soft-red btn--sm">
-                    Ver líneas e integrantes →
-                  </a>
+              <div class="semillero-card__meta">
+                <div class="meta-row">
+                  <span class="meta-row__label">Director</span>
+                  <span class="meta-row__value">${escapeHtml(s.director?.nombre || 'No asignado')}</span>
                 </div>
-              </article>
-            `;
-          })
-          .join('')}
-      </div>`
+                <div class="meta-row">
+                  <span class="meta-row__label">Integrantes</span>
+                  <span class="meta-row__value">${count} registrado${count === 1 ? '' : 's'}</span>
+                </div>
+              </div>
+
+              <div class="tags-wrap">${lineasHtml}</div>
+
+              <div class="semillero-card__footer">
+                <span class="text-sm text-muted">${(s.lineas || []).length} línea(s)</span>
+                <a href="#/semilleros/${s.id}" class="btn btn--soft-red btn--sm">
+                  Ver líneas e integrantes →
+                </a>
+              </div>
+            </article>
+          `;
+        })
+        .join('')}
+    </div>`;
+
+  const tableHtml = `
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Semillero</th>
+              <th>Director</th>
+              <th>Integrantes</th>
+              <th>Líneas de Investigación</th>
+              <th style="text-align: right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered
+              .map((s) => {
+                const count = getIntegrantesBySemillero(s.id).length;
+                const lineasTags = (s.lineas || []).length
+                  ? s.lineas.map((l) => `<span class="tag"><span>${escapeHtml(l.nombre)}</span></span>`).join('')
+                  : '<span class="text-sm text-muted">Sin líneas asociadas</span>';
+
+                return `
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span class="sigla-badge">${escapeHtml(s.sigla)}</span>
+                      <div>
+                        <strong style="cursor: pointer;" data-action="open" data-id="${s.id}">
+                          ${escapeHtml(s.nombre)}
+                        </strong>
+                        <div class="text-sm text-muted">${escapeHtml(s.grupoInvestigacion)}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div><strong>${escapeHtml(s.director?.nombre || 'No asignado')}</strong></div>
+                    <div class="text-sm text-muted">${escapeHtml(s.director?.correo || '')}</div>
+                  </td>
+                  <td>
+                    <span class="badge badge--member">${count} registrado${count === 1 ? '' : 's'}</span>
+                  </td>
+                  <td>
+                    <div class="tags-wrap">${lineasTags}</div>
+                  </td>
+                  <td style="text-align: right;">
+                    <div class="card-actions" style="justify-content: flex-end;">
+                      <a href="#/semilleros/${s.id}" class="btn btn--soft-red btn--sm" title="Ver líneas e integrantes">
+                        Ver detalle →
+                      </a>
+                      <button type="button" class="btn btn--secondary btn--sm" data-action="edit" data-id="${s.id}">
+                        Editar
+                      </button>
+                      <button type="button" class="btn btn--danger btn--sm" data-action="delete" data-id="${s.id}">
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>`;
+              })
+              .join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+
+  const contentHtml = filtered.length
+    ? viewMode === 'table'
+      ? tableHtml
+      : cardsHtml
     : renderEmptyState(
         'No se encontraron semilleros',
         semilleros.length
@@ -165,9 +237,13 @@ export function renderSemillerosView(container) {
           <option value="">Todos los directores</option>
           ${directorOptions}
         </select>
+        <div class="view-toggle" role="group" aria-label="Modo de visualización">
+          <button type="button" class="view-toggle__btn ${viewMode === 'cards' ? 'is-active' : ''}" data-view-mode="cards">Tarjetas</button>
+          <button type="button" class="view-toggle__btn ${viewMode === 'table' ? 'is-active' : ''}" data-view-mode="table">Tabla</button>
+        </div>
       </div>
 
-      ${cardsHtml}
+      ${contentHtml}
     </section>
   `;
 
@@ -199,6 +275,16 @@ export function renderSemillerosView(container) {
   container.querySelector('#semDirectorFilter')?.addEventListener('change', (e) => {
     filters.directorId = e.target.value;
     renderSemillerosView(container);
+  });
+
+  container.querySelectorAll('[data-view-mode]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const nextMode = btn.dataset.viewMode;
+      if (nextMode && nextMode !== viewMode) {
+        viewMode = nextMode;
+        renderSemillerosView(container);
+      }
+    });
   });
 
   // Acciones en tarjetas
