@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semilleros de Investigación · UFPS Cúcuta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Institucional UFPS -->
+    <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+      <div class="sidebar__brand">
+        <div class="brand-emblem" aria-hidden="true">UFPS</div>
+        <div class="brand-text">
+          <span class="brand-title">Semilleros</span>
+          <span class="brand-subtitle">Vicerrectoría Asistente · Cúcuta</span>
+        </div>
+        <button class="icon-btn sidebar__close" id="sidebarCloseBtn" aria-label="Cerrar menú">
+          ✕
+        </button>
+      </div>
+
+      <nav class="sidebar__nav">
+        <span class="nav-section-label">Gestión Académica</span>
+        <a href="#/semilleros" class="nav-link" data-route="semilleros">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+          </svg>
+          <span>Semilleros</span>
+          <span class="nav-badge" id="navCountSemilleros">0</span>
+        </a>
+        <a href="#/integrantes" class="nav-link" data-route="integrantes">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <span>Integrantes</span>
+          <span class="nav-badge" id="navCountIntegrantes">0</span>
+        </a>
+        <a href="#/productos" class="nav-link" data-route="productos">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+          </svg>
+          <span>Productos</span>
+          <span class="nav-badge" id="navCountProductos">0</span>
+        </a>
+
+        <span class="nav-section-label">Catálogos</span>
+        <a href="#/lineas" class="nav-link" data-route="lineas">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+          <span>Líneas</span>
+          <span class="nav-badge" id="navCountLineas">0</span>
+        </a>
+        <a href="#/directores" class="nav-link" data-route="directores">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span>Directores</span>
+          <span class="nav-badge" id="navCountDirectores">0</span>
+        </a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="api-status-card" id="apiStatusCard">
+          <span class="status-dot" id="apiStatusDot"></span>
+          <div class="api-status-info">
+            <span class="api-status-label" id="apiStatusText">Conectando API...</span>
+            <span class="api-status-url" id="apiStatusUrl">localhost:8080</span>
+          </div>
+          <button class="icon-btn icon-btn--light" id="refreshAllBtn" title="Sincronizar datos" aria-label="Sincronizar datos">
+            ↻
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Contenido Principal -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar__left">
+          <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú">
+            ☰
+          </button>
+          <div class="breadcrumb" id="topbarBreadcrumb">
+            <span class="breadcrumb__item is-active">Semilleros de Investigación</span>
+          </div>
+        </div>
+        <div class="topbar__right">
+          <span class="ufps-pill">Universidad Francisco de Paula Santander</span>
+        </div>
+      </header>
+
+      <main class="main-content" id="appView" tabindex="-1">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Cargando sistema de semilleros...</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Contenedores globales para Modales y Notificaciones -->
+  <div id="modalRoot"></div>
+  <div id="toastRoot" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
+
