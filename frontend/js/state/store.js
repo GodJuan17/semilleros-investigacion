@@ -62,6 +62,10 @@ export function getIntegrantesBySemillero(semilleroId) {
   return store.integrantes.filter((i) => Number(i.semilleroId) === Number(semilleroId));
 }
 
+export function getLideresBySemillero(semilleroId) {
+  return getIntegrantesBySemillero(semilleroId).filter((i) => Boolean(i.esLider));
+}
+
 export function getProductosBySemillero(semilleroId) {
   return store.productos.filter((p) => Number(p.semilleroId) === Number(semilleroId));
 }

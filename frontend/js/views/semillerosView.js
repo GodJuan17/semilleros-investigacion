@@ -1,4 +1,9 @@
-import { store, loadAllData, getIntegrantesBySemillero } from '../state/store.js';
+import {
+  store,
+  loadAllData,
+  getIntegrantesBySemillero,
+  getLideresBySemillero,
+} from '../state/store.js';
 import { semillerosApi } from '../api/semillerosApi.js';
 import { confirmDialog } from '../ui/modal.js';
 import { showToast } from '../ui/toast.js';
@@ -21,12 +26,18 @@ export function renderSemillerosView(container) {
 
   const filtered = semilleros.filter((s) => {
     const q = filters.query.trim().toLowerCase();
+    const lideres = getLideresBySemillero(s.id);
     const matchesQuery =
       !q ||
       s.nombre.toLowerCase().includes(q) ||
       s.sigla.toLowerCase().includes(q) ||
       s.grupoInvestigacion.toLowerCase().includes(q) ||
-      (s.director?.nombre || '').toLowerCase().includes(q);
+      (s.director?.nombre || '').toLowerCase().includes(q) ||
+      lideres.some(
+        (lider) =>
+          lider.nombre.toLowerCase().includes(q) ||
+          (lider.codigo || '').toLowerCase().includes(q)
+      );
 
     const matchesLinea =
       !filters.lineaId ||
@@ -58,6 +69,10 @@ export function renderSemillerosView(container) {
       ${filtered
         .map((s) => {
           const count = getIntegrantesBySemillero(s.id).length;
+          const lideres = getLideresBySemillero(s.id);
+          const lideresTexto = lideres.length
+            ? lideres.map((lider) => lider.nombre).join(', ')
+            : 'No asignado';
           const lineasHtml = (s.lineas || []).length
             ? s.lineas.map((l) => `<span class="tag">${escapeHtml(l.nombre)}</span>`).join('')
             : '<span class="text-sm text-muted">Sin líneas asociadas</span>';
@@ -89,6 +104,10 @@ export function renderSemillerosView(container) {
                 <div class="meta-row">
                   <span class="meta-row__label">Director</span>
                   <span class="meta-row__value">${escapeHtml(s.director?.nombre || 'No asignado')}</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-row__label">Líder${lideres.length === 1 ? '' : 'es'}</span>
+                  <span class="meta-row__value">${escapeHtml(lideresTexto)}</span>
                 </div>
                 <div class="meta-row">
                   <span class="meta-row__label">Integrantes</span>
@@ -127,6 +146,12 @@ export function renderSemillerosView(container) {
             ${filtered
               .map((s) => {
                 const count = getIntegrantesBySemillero(s.id).length;
+                const lideres = getLideresBySemillero(s.id);
+                const lideresTexto = lideres.length
+                  ? `${lideres.length === 1 ? 'Líder' : 'Líderes'}: ${lideres
+                      .map((lider) => lider.nombre)
+                      .join(', ')}`
+                  : '';
                 const lineasTags = (s.lineas || []).length
                   ? s.lineas.map((l) => `<span class="tag"><span>${escapeHtml(l.nombre)}</span></span>`).join('')
                   : '<span class="text-sm text-muted">Sin líneas asociadas</span>';
@@ -150,6 +175,7 @@ export function renderSemillerosView(container) {
                   </td>
                   <td>
                     <span class="badge badge--member">${count} registrado${count === 1 ? '' : 's'}</span>
+                    ${lideresTexto ? `<div class="text-sm text-muted">★ ${escapeHtml(lideresTexto)}</div>` : ''}
                   </td>
                   <td>
                     <div class="tags-wrap">${lineasTags}</div>
@@ -226,7 +252,7 @@ export function renderSemillerosView(container) {
         <div class="search-box">
           <span class="search-box__icon">🔍</span>
           <input type="search" class="search-box__input" id="semSearchInput"
-            placeholder="Buscar por nombre, sigla, grupo o director..."
+            placeholder="Buscar por nombre, sigla, grupo, director o líder..."
             value="${escapeHtml(filters.query)}" />
         </div>
         <select class="filter-select" id="semLineaFilter" aria-label="Filtrar por línea">
