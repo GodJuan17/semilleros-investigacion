@@ -34,6 +34,11 @@ button {
   cursor: pointer;
 }
 
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--ufps-red-600);
+}
+
 h1, h2, h3, h4, p {
   margin: 0;
 }
@@ -83,6 +88,24 @@ h1, h2, h3, h4, p {
 .mt-1 { margin-top: 8px; }
 .mt-2 { margin-top: 16px; }
 .mt-3 { margin-top: 24px; }
+
+/* Transición suave al alternar entre tema claro y oscuro */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 260ms ease, color 260ms ease, border-color 260ms ease,
+    box-shadow 260ms ease, transform 260ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: none !important;
+  }
+}
 
 @media (max-width: 960px) {
   .main-wrapper {

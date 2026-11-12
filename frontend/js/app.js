@@ -1,6 +1,7 @@
 import { store, subscribe, loadAllData } from './state/store.js';
 import { renderCurrentRoute } from './router.js';
 import { showToast } from './ui/toast.js';
+import { setupThemeToggle } from './ui/theme.js';
 import { API_BASE_URL } from './config.js';
 
 function updateSidebarStatus(state) {
@@ -68,6 +69,7 @@ async function syncData(showFeedback = false) {
 }
 
 async function bootstrap() {
+  setupThemeToggle();
   setupMobileSidebar();
   subscribe(updateSidebarStatus);
 

@@ -186,7 +186,7 @@
   position: sticky;
   top: 0;
   height: var(--topbar-height);
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--bg-topbar);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   padding: 0 32px;
@@ -247,6 +247,85 @@
   padding: 5px 12px;
   border-radius: var(--radius-full);
   white-space: nowrap;
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Switch de tema claro / oscuro */
+.theme-switch {
+  position: relative;
+  width: 68px;
+  height: 34px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--bg-subtle);
+  transition: background-color var(--transition-base), border-color var(--transition-base);
+}
+
+.theme-switch:hover {
+  border-color: var(--ufps-red-300);
+}
+
+.theme-switch:focus-visible {
+  outline: 2px solid var(--ufps-red-500);
+  outline-offset: 2px;
+}
+
+.theme-switch__icon {
+  position: relative;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  transition: color var(--transition-base);
+}
+
+.theme-switch__icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.theme-switch__icon--sun {
+  color: #b45309;
+}
+
+.theme-switch__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), background-color var(--transition-base),
+    border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+[data-theme='dark'] .theme-switch__thumb {
+  transform: translateX(34px);
+  background: var(--ufps-red-600);
+  border-color: var(--ufps-red-500);
+}
+
+[data-theme='dark'] .theme-switch__icon--sun {
+  color: var(--text-muted);
+}
+
+[data-theme='dark'] .theme-switch__icon--moon {
+  color: #ffffff;
 }
 
 /* ==========================================================================
@@ -1114,7 +1193,7 @@ textarea.form-control {
 .toast {
   padding: 13px 16px;
   border-radius: var(--radius-md);
-  background: var(--text-primary);
+  background: var(--bg-inverse);
   color: #ffffff;
   font-size: 0.88rem;
   font-weight: 500;
@@ -1169,6 +1248,53 @@ textarea.form-control {
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Modo oscuro: ajustes de contraste
+   ========================================================================== */
+[data-theme='dark'] .breadcrumb__link:hover,
+[data-theme='dark'] .semillero-card__title:hover {
+  color: var(--ufps-red-300);
+}
+
+[data-theme='dark'] .tag__remove:hover {
+  color: var(--ufps-red-300);
+}
+
+[data-theme='dark'] .kpi-card::before {
+  background: var(--ufps-red-500);
+}
+
+[data-theme='dark'] .info-block {
+  border-left-color: var(--ufps-red-500);
+}
+
+[data-theme='dark'] .search-box__input:focus,
+[data-theme='dark'] .filter-select:focus,
+[data-theme='dark'] .form-control:focus {
+  border-color: var(--ufps-red-400);
+}
+
+[data-theme='dark'] .kpi-card.is-clickable:focus-visible {
+  outline-color: var(--ufps-red-400);
+}
+
+[data-theme='dark'] .spinner {
+  border-top-color: var(--ufps-red-400);
+}
+
+[data-theme='dark'] .btn--danger:hover {
+  background: #3a1b1d;
+}
+
+[data-theme='dark'] .modal-backdrop {
+  background: rgba(0, 0, 0, 0.68);
+}
+
+[data-theme='dark'] select option {
+  background: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 /* ==========================================================================

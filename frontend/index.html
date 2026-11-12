@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6f7f9" />
   <title>Semilleros de Investigación · UFPS Cúcuta</title>
+  <script>
+    (() => {
+      try {
+        if (localStorage.getItem('ufps-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch {
+        /* Sin acceso a localStorage: se usa el tema claro por defecto. */
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -106,6 +118,28 @@
         </div>
         <div class="topbar__right">
           <span class="ufps-pill">Universidad Francisco de Paula Santander</span>
+          <button
+            type="button"
+            class="theme-switch"
+            id="themeToggle"
+            role="switch"
+            aria-checked="false"
+            aria-label="Activar modo oscuro"
+            title="Activar modo oscuro"
+          >
+            <span class="theme-switch__icon theme-switch__icon--sun" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+              </svg>
+            </span>
+            <span class="theme-switch__icon theme-switch__icon--moon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            </span>
+            <span class="theme-switch__thumb" aria-hidden="true"></span>
+          </button>
         </div>
       </header>
 
