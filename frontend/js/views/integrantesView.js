@@ -19,6 +19,9 @@ let filters = {
 export function renderIntegrantesView(container) {
   const { integrantes, semilleros } = store;
 
+  const totalIntegrantes = integrantes.length;
+  const totalLideres = integrantes.filter((i) => Boolean(i.esLider)).length;
+
   const filtered = integrantes.filter((i) => {
     const q = filters.query.trim().toLowerCase();
     const matchesQuery =
@@ -118,6 +121,26 @@ export function renderIntegrantesView(container) {
         </div>
       </div>
 
+      <div class="kpi-grid">
+        <div class="kpi-card is-clickable ${!filters.soloLideres ? 'is-active' : ''}" id="kpiTotalIntegrantes" role="button" tabindex="0" title="Ver todos los integrantes">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span class="kpi-label">Cantidad de Integrantes</span>
+            <span class="badge badge--member">Integrantes</span>
+          </div>
+          <span class="kpi-value">${totalIntegrantes}</span>
+          <span class="kpi-hint">Estudiantes vinculados a semilleros</span>
+        </div>
+
+        <div class="kpi-card is-clickable ${filters.soloLideres ? 'is-active' : ''}" id="kpiTotalLideres" role="button" tabindex="0" title="Filtrar solo líderes">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span class="kpi-label">Cantidad de Líderes</span>
+            <span class="badge badge--leader">★ Líderes</span>
+          </div>
+          <span class="kpi-value">${totalLideres}</span>
+          <span class="kpi-hint">Integrantes con rol de liderazgo</span>
+        </div>
+      </div>
+
       <div class="toolbar">
         <div class="search-box">
           <span class="search-box__icon">🔍</span>
@@ -142,6 +165,36 @@ export function renderIntegrantesView(container) {
   const openNew = () => openIntegranteFormModal({}, () => renderIntegrantesView(container));
   container.querySelector('#newIntegranteBtn')?.addEventListener('click', openNew);
   container.querySelector('#emptyCreateIntegranteBtn')?.addEventListener('click', openNew);
+
+  const toggleAll = () => {
+    if (filters.soloLideres) {
+      filters.soloLideres = false;
+      renderIntegrantesView(container);
+    }
+  };
+
+  const toggleLideres = () => {
+    filters.soloLideres = !filters.soloLideres;
+    renderIntegrantesView(container);
+  };
+
+  const kpiAll = container.querySelector('#kpiTotalIntegrantes');
+  kpiAll?.addEventListener('click', toggleAll);
+  kpiAll?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleAll();
+    }
+  });
+
+  const kpiLideres = container.querySelector('#kpiTotalLideres');
+  kpiLideres?.addEventListener('click', toggleLideres);
+  kpiLideres?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleLideres();
+    }
+  });
 
   const searchInput = container.querySelector('#intSearchInput');
   searchInput?.addEventListener('input', (e) => {

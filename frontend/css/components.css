@@ -330,6 +330,28 @@
   color: var(--text-secondary);
 }
 
+.kpi-card.is-clickable {
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.kpi-card.is-clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--ufps-red-200);
+}
+
+.kpi-card.is-clickable:focus-visible {
+  outline: 2px solid var(--ufps-red-600);
+  outline-offset: 2px;
+}
+
+.kpi-card.is-active {
+  border-color: var(--ufps-red-500);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 1px var(--ufps-red-500);
+}
+
 .toolbar {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
